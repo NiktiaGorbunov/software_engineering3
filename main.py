@@ -1,16 +1,15 @@
-# This is a sample Python script.
+from fastapi import FastAPI, File
+from fastapi.responses import Response
+from virtual_background import process_image
+from typing import Annotated
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+app = FastAPI()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+@app.post("/file/upload-bytes")
+def upload_file_bytes(
+    image: Annotated[bytes, File()],
+    background: Annotated[bytes, File()]
+):
+  result = process_image(image, background)
+  return Response(content=result, media_type="image/png")

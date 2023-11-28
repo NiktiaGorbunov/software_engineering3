@@ -6,37 +6,25 @@ import mediapipe as mp
 DESIRED_HEIGHT = 480
 DESIRED_WIDTH = 480
 
-PATH_TO_BACKGROUNDS = 'backgrounds/back_test.jpg'
-PATH_TO_IMAGE = 'datasets/cloun.jpg'
-PATH_TO_SAVE = 'output/cloun.jpg'
+def process_image(image, background_image):
+    with mp.solutions.selfie_segmentation.SelfieSegmentation() as selfie_segmentation:
+        img_as_np = np.frombuffer(image, dtype=np.uint8)
+        image = cv2.imdecode(img_as_np, flags=1)
+        # Convert the BGR image to RGB and process it with MediaPipe Selfie Segmentation.
+        results = selfie_segmentation.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
+        bg_as_np = np.frombuffer(background_image, dtype=np.uint8)
+        background_image = cv2.imdecode(bg_as_np, flags=1)
 
-def resize_and_show(image):
-    h, w = image.shape[:2]
-    if h < w:
-        img = cv2.resize(image, (DESIRED_WIDTH, math.floor(h / (w / DESIRED_WIDTH))))
-    else:
-        img = cv2.resize(image, (math.floor(w / (h / DESIRED_HEIGHT)), DESIRED_HEIGHT))
+        condition = np.stack((results.segmentation_mask,) * 3, axis=-1) > 0.1
+        output_image = np.where(condition, image, background_image)
 
-    # Save image to 'output'
-    cv2.imwrite(PATH_TO_SAVE, img)
+        h, w = output_image.shape[:2]
+        if h < w:
+            img = cv2.resize(output_image, (DESIRED_WIDTH, math.floor(h / (w / DESIRED_WIDTH))))
+        else:
+            img = cv2.resize(output_image, (math.floor(w / (h / DESIRED_HEIGHT)), DESIRED_HEIGHT))
 
-    cv2.waitKey(0)
+    image_bytes = cv2.imencode('.jpg', img)[1].tobytes()
 
-    # It is for removing/deleting created GUI window from screen and memory
-    cv2.destroyAllWindows()
-
-image = cv2.imread(PATH_TO_IMAGE)
-
-mp_selfie_segmentation = mp.solutions.selfie_segmentation
-
-# Blur the image background based on the segementation mask.
-with mp_selfie_segmentation.SelfieSegmentation() as selfie_segmentation:
-    # Convert the BGR image to RGB and process it with MediaPipe Selfie Segmentation.
-    results = selfie_segmentation.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-
-    bg_image = cv2.imread(PATH_TO_BACKGROUNDS)
-    condition = np.stack((results.segmentation_mask,) * 3, axis=-1) > 0.1
-    output_image = np.where(condition, image, bg_image)
-
-    resize_and_show(output_image)
+    return image_bytes
