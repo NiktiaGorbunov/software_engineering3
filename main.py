@@ -6,8 +6,8 @@ from typing import Annotated
 app = FastAPI()
 
 
-@app.post("/file/upload-bytes")
-def upload_file_bytes(
+@app.post("/file/process-files")
+def process_files(
     image: Annotated[bytes, File()],
     background: Annotated[bytes, File()]
 ):
