@@ -6,15 +6,25 @@ import mediapipe as mp
 DESIRED_HEIGHT = 480
 DESIRED_WIDTH = 480
 
+
+
 def process_image(image, background_image):
+
+    mp_selfie_segmentation = mp.solutions.selfie_segmentation
+
+    image = cv2.imread(image)
+    #background_image = cv2.imread(background_image)
+
     with mp.solutions.selfie_segmentation.SelfieSegmentation() as selfie_segmentation:
-        img_as_np = np.frombuffer(image, dtype=np.uint8)
-        image = cv2.imdecode(img_as_np, flags=1)
+        # img_as_np = np.frombuffer(image, dtype=np.uint8)
+        # image = cv2.imdecode(img_as_np, flags=1)
+
         # Convert the BGR image to RGB and process it with MediaPipe Selfie Segmentation.
         results = selfie_segmentation.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
 
-        bg_as_np = np.frombuffer(background_image, dtype=np.uint8)
-        background_image = cv2.imdecode(bg_as_np, flags=1)
+        #bg_as_np = np.frombuffer(background_image, dtype=np.uint8)
+        #background_image = cv2.imdecode(bg_as_np, flags=1)
+        background_image = cv2.imread(background_image)
 
         condition = np.stack((results.segmentation_mask,) * 3, axis=-1) > 0.1
         output_image = np.where(condition, image, background_image)
@@ -25,6 +35,16 @@ def process_image(image, background_image):
         else:
             img = cv2.resize(output_image, (math.floor(w / (h / DESIRED_HEIGHT)), DESIRED_HEIGHT))
 
-    image_bytes = cv2.imencode('.jpg', img)[1].tobytes()
+        cv2.imshow('img', img)
 
-    return image_bytes
+        cv2.waitKey(0)
+
+        # It is for removing/deleting created GUI window from screen
+        # and memory
+        cv2.destroyAllWindows()
+
+    # image_bytes = cv2.imencode('.jpg', img)[1].tobytes()
+    #
+    # return image_bytes
+
+process_image('datasets/cloun.jpg', 'backgrounds/back_test.jpg')
