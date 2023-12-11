@@ -108,5 +108,5 @@ jobs:
           script: | 
             docker stop sw3
             docker rm sw3
-            docker pull ghcr.io/NikitaGorbunov/software_engineering3:main
-            docker run --name sw3 -p 8501:8501 --detach ghcr.io/NikitaGorbunov/software_engineering3:main
+            docker pull ghcr.io/niktiagorbunov/software_engineering3:main
+            docker run --name sw3 -p 8501:8501 --detach ghcr.io/niktiagorbunov/software_engineering3:main
