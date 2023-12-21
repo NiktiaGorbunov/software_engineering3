@@ -32,3 +32,27 @@ def process_image(image, background_image):
     return image_bytes
 
 
+# data_img = cv2.imread('datasets/cloun.jpg')
+# data_img = cv2.imencode('.jpg', data_img)[1].tobytes()
+# print(type(data_img))
+#
+# back_img = cv2.imread('backgrounds/back_test.jpg')
+# back_img = cv2.imencode('.jpg', back_img)[1].tobytes()
+#
+# img = process_image(data_img, back_img)
+#
+# nparr = np.frombuffer(img, np.byte)
+# img2 = cv2.imdecode(nparr, cv2.IMREAD_ANYCOLOR)
+#
+# processed_img = cv2.imencode('.jpg', img2)[1].tobytes()
+#
+# cv2.imshow('img', img2)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
+#
+# diagonal_data_img = np.linalg.norm(data_img.shape[:2])
+# diagonal_back_img = np.linalg.norm(back_img.shape[:2])
+# diagonal_processed_img = np.linalg.norm(processed_img.shape[:2])
+# print(diagonal_data_img)
+# print(diagonal_back_img)
+# print(diagonal_processed_img)

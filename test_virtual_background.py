@@ -18,6 +18,7 @@ class TestVirtualBackground(unittest.TestCase):
         # Создаем тестовые изображения
         data_img = cv2.imread('datasets/cloun.jpg')
         data_img_bytes = cv2.imencode('.jpg', data_img)[1].tobytes()
+
         back_img = cv2.imread('backgrounds/back_test.jpg')
         back_img_bytes = cv2.imencode('.jpg', back_img)[1].tobytes()
 
