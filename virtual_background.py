@@ -29,7 +29,7 @@ def process_image(image, background_image):
 
     image_bytes = cv2.imencode('.jpg', img)[1].tobytes()
 
-    print('test')
+
     return image_bytes
 
 
