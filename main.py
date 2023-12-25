@@ -17,6 +17,6 @@ def process_files(
 
 @app.get("/")
 def index():
-    with open(f"{VIEWS_PATH}/index.html", "r") as f:
+    with open(f"{VIEWS_PATH}/index.html", "r", encoding='utf-8') as f:
       content = f.read()
     return HTMLResponse(content, status_code=200)
