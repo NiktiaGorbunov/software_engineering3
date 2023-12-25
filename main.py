@@ -1,10 +1,11 @@
 from fastapi import FastAPI, File
-from fastapi.responses import Response
+from fastapi.responses import Response, HTMLResponse
 from virtual_background import process_image
 from typing import Annotated
 
-app = FastAPI()
+VIEWS_PATH = "./application_root/views"
 
+app = FastAPI()
 
 @app.post("/file/process-files")
 def process_files(
@@ -13,3 +14,9 @@ def process_files(
 ):
     result = process_image(image, background)
     return Response(content=result, media_type="image/png")
+
+@app.get("/")
+def index():
+    with open(f"{VIEWS_PATH}/index.html", "r") as f:
+      content = f.read()
+    return HTMLResponse(content, status_code=200)
