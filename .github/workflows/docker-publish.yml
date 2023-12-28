@@ -43,6 +43,9 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Run unit tests
+      run: |
+        python -m unittest test_virtual_background.py
   build:
     runs-on: ubuntu-latest
     permissions:
